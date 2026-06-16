@@ -25,7 +25,7 @@ void insertTNode(Root *T, const char *word) {
         }
         current = current->children[index];
     }
-    current->EndOfTheWord = 1;  // fix typo: curret -> current
+    current->EndOfTheWord = 1;  
 }
 
 // ===== searchTNode =====
@@ -110,4 +110,112 @@ void autocomplete(Root T, const char *prefix) {
     for (int i = 0; i < limit; i++) {
         printf("  [%d] %s (freq: %d)\n", i + 1, results[i].word, results[i].frequency);
     }
+
+    
 }
+
+// ===== freeTrie =====
+
+void freeTrie(address node){
+    if (node  == NULL){
+        return;
+    }
+
+    for (int i = 0; i < ALPHABET_SIZE; i++) {
+        freeTrie(node->children[i]);
+    }
+
+    free(node);
+}
+
+// ===== loadDataset =====
+
+void loadDataset(Root *T, const char *filename){
+    FILE *file = fopen(filename, "r");
+    if (file == NULL){
+        printf("File tidak ditemukan!");
+        return;
+    } 
+
+    char line[MAX_WORD_LEN];
+    while (fgets(line, MAX_WORD_LEN, file) != NULL){
+        int len = strlen(line);
+        if (len > 0 && line[len-1] == '\n'){
+            line[len - 1] = '\0';
+        }
+
+        if (strlen(line) > 0){
+            insertTNode(T, line);
+        }
+    }
+
+    fclose (file);
+    
+}
+
+// ===== collectAllWords =====
+
+void collectAllWords(address node, char *prefix, int depth, Suggestion *results, int *count){
+    if (node == NULL) return;
+    if (*count >= MAX_RESULT) return;
+    if (node->EndOfTheWord == 1 && node->frequency > 0){
+        prefix[depth] = '\0';
+        strcpy(result[*count].word, prefix);
+        result[*count].frequency = node->frequency;
+        (*count)++;
+    }
+
+    for (int i = 0; i < ALPHABET_SIZE, i++){
+        if (node->children[i] != NULL){
+            prefix[depth] = 'a' + i;
+            collectAllWords(node->children[i], prefix, depth + 1, result, count);
+        }
+    }
+}
+
+// ===== saveFrequencies =====
+
+void saveFrequencies(Root T, const char *filename) {
+    Suggestion results[MAX_RESULTS];
+    int count = 0;
+    char buffer[MAX_WORD_LEN];
+
+    collectAllWords(T, buffer, 0, results, &count);
+
+    FILE *file = fopen(filename, "w");
+    if (file == NULL) {
+        printf("Error: gagal menyimpan frekuensi!\n");
+        return;
+    }
+
+    for (int i = 0; i < count; i++) {
+        fprintf(file, "%s %d\n", results[i].word, results[i].frequency);
+    }
+
+    fclose(file);
+}
+
+// ===== loadFrequencies =====
+
+void loadFrequencies(Root T, const char *filename) {
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        return;
+    }
+
+    char word[MAX_WORD_LEN];
+    int freq;
+    char line[MAX_WORD_LEN];
+
+    while (fgets(line, MAX_WORD_LEN, file) != NULL) {
+        if (sscanf(line, "%s %d", word, &freq) == 2) {
+            address node = searchTNode(T, word);
+            if (node != NULL) {
+                node->frequency = freq;
+            }
+        }
+    }
+
+    fclose(file);
+}
+
