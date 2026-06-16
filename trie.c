@@ -28,3 +28,29 @@ void insertTNode(Root *T, const char *word) {
     current->EndOfTheWord = 1;  // fix typo: curret -> current
 }
 
+// ===== searchTNode =====
+address searchTNode(Root T, const char *word) {
+    address current = T;
+    for (int i = 0; word[i] != '\0'; i++) {
+        int index = word[i] - 'a';
+        if (current->children[index] == NULL) {
+            return NULL;
+        }
+        current = current->children[index];
+    }
+    if (current->EndOfTheWord == 1) {
+        return current;
+    }
+    return NULL;
+}
+
+// ===== compareSuggestion =====
+int compareSuggestion(const void *a, const void *b) {
+    Suggestion *sa = (Suggestion *)a;
+    Suggestion *sb = (Suggestion *)b;
+    if (sb->frequency != sa->frequency) {
+        return sb->frequency - sa->frequency;  // frekuensi tinggi dulu
+    }
+    return strcmp(sa->word, sb->word);          // jika sama, urut abjad
+}
+
