@@ -157,18 +157,18 @@ void loadDataset(Root *T, const char *filename){
 
 void collectAllWords(address node, char *prefix, int depth, Suggestion *results, int *count){
     if (node == NULL) return;
-    if (*count >= MAX_RESULT) return;
+    if (*count >= MAX_RESULTS) return;
     if (node->EndOfTheWord == 1 && node->frequency > 0){
         prefix[depth] = '\0';
-        strcpy(result[*count].word, prefix);
-        result[*count].frequency = node->frequency;
+        strcpy(results[*count].word, prefix);
+        results[*count].frequency = node->frequency;
         (*count)++;
     }
 
-    for (int i = 0; i < ALPHABET_SIZE, i++){
+    for (int i = 0; i < ALPHABET_SIZE; i++){
         if (node->children[i] != NULL){
             prefix[depth] = 'a' + i;
-            collectAllWords(node->children[i], prefix, depth + 1, result, count);
+            collectAllWords(node->children[i], prefix, depth + 1, results, count);
         }
     }
 }
@@ -218,4 +218,3 @@ void loadFrequencies(Root T, const char *filename) {
 
     fclose(file);
 }
-
