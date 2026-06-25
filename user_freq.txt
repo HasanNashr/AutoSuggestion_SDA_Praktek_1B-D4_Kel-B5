@@ -1,1 +1,11 @@
+<<<<<<< HEAD
 indah 5
+=======
+ambatukam 2
+amor 1
+indonesia 1
+injak 2
+komputer 1
+naam 1
+perai 1
+>>>>>>> 6a6d882d4b72a88347bf940326403704eb8a76e9

@@ -8,7 +8,7 @@
 // ===== KONSTANTA =====
 #define ALPHABET_SIZE 26
 #define MAX_WORD_LEN  100
-#define TOP_K         5
+#define TOP_K         10
 #define MAX_RESULTS   1000
 #define DATASET_FILE  "kata_dataset.txt"
 #define FREQ_FILE     "user_freq.txt"

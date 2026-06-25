@@ -104,7 +104,7 @@ void autocomplete(Root T, const char *prefix) {
     // Sort: frekuensi desc, lalu abjad asc
     qsort(results, count, sizeof(Suggestion), compareSuggestion);
 
-    // Tampilkan top 5
+    // Tampilkan top 10
     int limit = (count < TOP_K) ? count : TOP_K;
     printf("\nSuggestion untuk \"%s\":\n", prefix);
     for (int i = 0; i < limit; i++) {
